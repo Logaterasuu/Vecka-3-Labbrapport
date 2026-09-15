@@ -300,10 +300,136 @@ vim ~/anteckningar.txt
 #### Utvärderingsfrågor (VimTutor)
 
 * **Vad är den fundamentala skillnaden mellan Normal mode och Insert mode i vim?**
-  * *Svar:* [Skriv ditt svar här]
+  * *Svar:* [I Insert mode lägger du till text]
 * **Du har skrivit fel i en känslig konfigurationsfil och vill lämna den helt orörd. Vad gör du?**
-  * *Svar:* [Skriv ditt svar här]
+  * *Svar:* [ESC :q!]
 * **Vad är skillnaden mellan** **:q** **och** **:q!** **?**
-  * *Svar:* [Skriv ditt svar här]
+  * *Svar:* [Du slipper varningen med :q!]
 * **Varför ligger** **vim** **förinstallerad på nästan alla Linux-system till skillnad från** **nano** **?**
-  * *Svar:* [Skriv ditt svar här] 
+  * *Svar:* [Vim är den bättre textredigeraren nano är lättare men också mer primitiv]
+  * 
+  * # Del 6: Övning 6 – Tio frågor till filsystemet
+
+### Varför det är viktigt för IT-säkerhet
+
+Som säkerhetsanalytiker räcker det inte med att söka filer baserat på namn. Du måste kunna hitta filer utifrån egenskaper som **storlek**, **ändringstidpunkt** och **behörigheter** (t.ex. hitta dolda eller världsskrivbara filer som kan utgöra säkerhetsrisker).
+
+### Steg-för-steg-guider &amp; Kodförklaringar
+
+Svara på frågorna genom att köra kommandona i terminalen och anteckna både kommandot och resultatet:
+
+1. **Hur många filer finns det under** **/etc** **?**
+  * *Kommando:* `sudo find /etc -type f | wc -l`
+  * *Förklaring:* `find /etc -type f` söker efter alla vanliga filer under `/etc`. Pipen `|` skickar utskriften till `wc -l` som räknar antalet rader.
+2. **Vilken är den största filen i din hemkatalog?**
+  * *Kommando:* `find ~ -type f -exec ls -s {} + | sort -n -r | head -1` (eller `du -ah ~ | sort -rh | head -5`)
+  * *Förklaring:* Söker filer i hemkatalogen `~`, sorterar efter storlek och visar den största överst.
+3. **Vilka filer under** **/var/log** **ändrades senaste timmen?**
+  * *Kommando:* `sudo find /var/log -mmin -60`
+  * *Förklaring:* `find` söker i loggkatalogen efter filer med ändringstid (`-mmin`) nyare än -60 minuter.
+4. **Hur mycket plats tar de tio största katalogerna under** **/usr** **?**
+  * *Kommando:* `sudo du -h /usr | sort -rh | head -10`
+  * *Förklaring:* `du -h` mäter katalogstorlekar i läsbart format. `sort -rh` sorterar i omvänd numerisk ordning med hänsyn till enheter (M/G).
+5. **Vilket datum skapades/ändrades** **/etc/passwd** **, och vem äger den?**
+  * *Kommando:* `ls -l /etc/passwd` (eller `stat /etc/passwd`)
+  * *Förklaring:* Visar ägare (`root`), grupp och tidsstämpel.
+6. **Hur många rader, ord och tecken har** **/etc/services** **?**
+  * *Kommando:* `wc /etc/services`
+  * *Förklaring:* `wc` (*word count*) visar rader, ord och bytes/tecken.
+7. **Finns det några filer i systemet som är skrivbara för alla?**
+  * *Kommando:* `find / -perm -o=w -type f 2&gt;/dev/null`
+  * *Förklaring:* Söker efter filer där "övriga" (`o`) har skrivrättighet (`w`). `2&gt;/dev/null` döljer felmeddelanden (*Permission denied*).
+8. **Vilka filer i din hemkatalog är tomma?**
+  * *Kommando:* `find ~ -type f -empty`
+  * *Förklaring:* Flaggan `-empty` filtrerar fram filer med storlek 0 bytes.
+9. **Hur många olika skal finns tillgängliga på maskinen, och var står det?**
+  * *Kommando:* `cat /etc/shells`
+  * *Förklaring:* Läser listan över godkända inloggningsskal.
+10. **Vilken katalog står du i – angivet som absolut sökväg?**
+  * *Kommando:* `pwd -P`
+  * *Förklaring:* Visar den fysiska, absoluta sökvägen från mapproten `/` utan symboliska länkar.
+
+---
+
+### Mall för svar (Övning 6)
+
+| Fråga                                       | Använt kommando | Resultat / Svar |
+| ------------------------------------------- | --------------- | --------------- |
+| 1\. Antal filer under /etc                  |                 |   1647              |
+| 2\. Största filen i \~                      |                 |meta.db|
+| 3\. Filer i /var/log ändrade senaste timmen |                 |sysstat/sa15
+|
+| 4\. 10 största katalogerna under /usr       |                 |/usr/lib
+|
+| 5\. Datum &amp; ägare för /etc/passwd           |                 |ls -l /etc/passwd|
+| 6\. Rader, ord, tecken i /etc/services      |                 |365|
+| 7\. Världsskrivbara filer på systemet       |                 |200|
+| 8\. Tomma filer i \~                        |                 |12|
+| 9\. Tillgängliga skal (/etc/shells)         |                 |8|
+| 10\. Absolut sökväg (pwd -P)                |                 |/home/ahmed|
+
+#### Diskussionsfrågor (Övning 6)
+
+* **Vilka två frågor gav dig** **Permission denied** **om du körde utan** **sudo** **, och varför?**
+  * *Svar:* [1 och 7 för att vanliga användare inte har läs rättigheter till vissa mappar i systemkatalogen.]
+* **Vad är den principiella skillnaden mellan kommandona** **du** **och** **df** **?**
+  * *Svar:* [du söker igenom hela filsystemet, summerar storleken på enskilda filer och mappar df frågar partitionen direkt om det totala utrymmet som finns kvar]
+* **Vad gör kommandot** **find** **som** **ls** **inte klarar av?**
+  * *Svar:* [find är ett mer krafrullt verktyg än find där man kan anpassa vad den ska leta efter utförligt.]
+  *
+  *  ###  
+### Mall för svar (Distro-detektiven)
+
+1. **Tre olika kommandon för att identifiera distribution och version på vilken Linux-maskin som helst:**
+  * Kommando 1: `cat /etc/os-release`
+  * Kommando 2: `hostnamectl`
+  * Kommando 3: `cat /etc/issue`
+2. **Vilket fält i** **/etc/os-release** **bör användas i ett automatiskt skript för korsplattformskompabilitet och varför?**
+  * *Fältnamn:* [ID]
+  * *Motivering:* [Det är ett ord och är enklare för skript att läsa]
+3. **Vad säger** **uname -r** **som** **/etc/os-release** **inte säger (och tvärtom)? Ge ett konkret exempel där skillnaden spelar roll:**
+  * *Svar:* [uname visar den exakta linux kärnan som körs, det kan spela roll om du har uppdaterat systemet och os-release kanske visar att den kör en uppdaterad version av linux men egentligen inte gör det fören du har startat om datorn.]
+4. **Leverantörers officiella supportslut (LTS &amp; Stabilitet):**
+
+| Distribution                           | Slutdatum för support | Källa (URL)    |
+| -------------------------------------- | --------------------- | -------------- |
+| **Ubuntu 24.04 LTS (standardsupport)** | [April 2029]      | [Fyll i URL] |
+| **Ubuntu 24.04 LTS (med Ubuntu Pro)**  | [April 2036]      | [Fyll i URL] |
+| **Debian stable (nuvarande version)**  | [Cirka juni 2026]      | [Fyll i URL] |
+| **CentOS Linux 7**                     | [30 juni 2024]      | [Fyll i URL] |
+
+1. **Kunden kör CentOS Linux 7\. Vad är statusen på den idag (efter 30 juni 2024), och vilka två distributioner är de naturliga ersättarna?**
+  * *Status idag:* [EOL, den får inga säkerhets uppdateringar längre]
+  * *Ersättare 1:* [Rocky  Linux]
+  * *Ersättare 2:* [AlmaLinux]
+2. **Vad är CentOS Stream idag, och hur förhåller det sig till RHEL i utvecklingskedjan?**
+  * *Svar:* [Det är ett testing ground för de kommande versionerna av Red hat enterprise linux]
+3. **Jämförelsetabell för pakethanterare:**
+
+| Uppgift                      | Debian/Ubuntu (apt / dpkg) | Red Hat/Fedora (dnf / rpm) | Arch (pacman) |
+| ---------------------------- | -------------------------- | -------------------------- | ------------- |
+| **Uppdatera paketlista**     |sudo apt update |sudo dnf makecache |sudo pacman -Sy|
+| **Installera paketet nginx** |sudo apt install nginx| sudo dnf install nginx|sudo pacman -S nginx|
+| **Söka efter ett paket**     |apt search nginx |dnf search nginx|pacman -Ss nginx|
+| **Vilket paket äger en fil** |dpkg -S /sökväg/till/fil|rpm -qf /sökväg/till/fil|pacman -Qo /sökväg/till/fil              |
+| **Lista installerade paket** |dpkg -l|rpm -qa|pacman -Q|
+
+1. **Paketfilsformat och lagringsplats för cachen:**
+  * Debian/Ubuntu: Format: .deb | Cache-sökväg: /var/cache/apt/archives/
+  * Red Hat/Fedora: Format: .rpm | Cache-sökväg: /var/cache/dnf/`
+  * Arch: Format: .pkg.tar.zst | Cache-sökväg: /var/cache/pacman/pkg/
+2. **Distributionsval och motivering för fyra scenarier:**
+  * **Webbserver orörd i 5 år utan IT-avdelning:**
+    * Val: [Debian Stable]
+    * Motivering: [Den prioriterar stabilitet och ändrar väldigtr sällan hur programmen fungerar. ]
+  * **Utvecklingsmaskin med de senaste verktygen:**
+    * Val: [Arch linux]
+    * Motivering: [använder rolling release]
+  * **Laptop för penetrationstestning:**
+    * Val: [Kali Linux]
+    * Motivering: [Kommer för instllerat med hundratals verktyg för att testa säkerhet.]
+  * **System på USB utan att lämna spår:**
+    * Val: [Tails]
+    * Motivering: [Amnesia, och är krypterad via Tor]
+3. **Kunden säger "Vi tar bara Kali, det är ju det säkraste". Vad svarar du från ett säkerhets- och driftperspektiv?**
+  * *Svar:* [Kali linux har kommer med väldigt många verktyg installerat vilket gör att den har en större attack yta.]

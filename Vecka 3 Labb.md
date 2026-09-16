@@ -432,4 +432,40 @@ Svara på frågorna genom att köra kommandona i terminalen och anteckna både k
     * Val: [Tails]
     * Motivering: [Amnesia, och är krypterad via Tor]
 3. **Kunden säger "Vi tar bara Kali, det är ju det säkraste". Vad svarar du från ett säkerhets- och driftperspektiv?**
-  * *Svar:* [Kali linux har kommer med väldigt många verktyg installerat vilket gör att den har en större attack yta.]
+  * *Svar:* [Kali linux har kommer med väldigt många verktyg installerat vilket gör att den har en större attack yta.]    
+
+
+
+
+Linuxövningar — intro 3    
+
+Hitta hem i filträdet · till 03C · ca 20 minuter 
+Inga pipes, inga flaggor att memorera. Bara trädet och sökvägarna.
+1. Ställ dig i roten med cd / och lista den. Para ihop katalogerna med rätt beskrivning — gissa först, titta sedan i 
+dem.    
+
+/etc = systemets kontroll panel för konfigurations filer  
+/home = hem katalogen där användarens filer och mappar ligger  
+/usr = där alla de flesta  installerade program  ligger  
+/var = här finns loggar och filer som växer.  
+/tmp = tillfälliga progam och filer som raderas vid omstart.  
+/bin = här ligger alla grundläggande kommandon och program så som "ls"
+
+2. Bygg ~/projekt/ med underkatalogerna dokument/, bilder/ och gammalt/ — med så få kommandon som 
+möjligt.  
+  
+mdkdir -p ~/project/{bilder,gammalt,dokument}
+
+
+
+
+3. Ta dig från ~/projekt/dokument till ~/projekt/bilder — först med en absolut sökväg, sedan med en 
+relativ. Skriv ner båda.  
+
+  cd   /home/ahmed/project/bilder    och    cd ../bilder    
+
+4 .Från ~/projekt/dokument: vart hamnar du med cd ../..? Gissa först.
+  
+Jag hamnar i använmdaren home    
+
+

@@ -466,6 +466,93 @@ relativ. Skriv ner båda.
 
 4 .Från ~/projekt/dokument: vart hamnar du med cd ../..? Gissa först.
   
-Jag hamnar i använmdaren home    
+Jag hamnar i använmdarens home    
+
+5.cp kkopierar filen och skriver den till den andrta platsen, mv flyttar över själva filen till den andra platsen  
+  
+Linuxövningar INTRO 4  
+2.Ta raden för fil.txt ur listningen och namnge alla fälten — de elva tecknen först, sedan de sju fält som följer 
+efter dem  
+1:Owner :RW  Groups :
+ RW  Other: R  
+   owner > group > size > >month > dag > tid> namn>    
+
+3. Vad är den allra första bokstaven, och vad blir den i stället för din katalog
+
+"-" för filen och "d" för katalogen
+
+4.4. Översätt åt båda hållen. Skriv ner svaren innan du kontrollerar.
+rw-r--r--: 644
+rwxr-xr-x: 755
+rw-------: 600
+600: rw-------
+755: rwxr-xr-x
+640: rw-r-----
+
+5.. Gör filen körbar för dig själv — vilken siffra motsvarar det nu? Ta sedan reda på vem du är och vilka grupper 
+du tillhör. Vad ger de tre sista kommandona som de andra inte ger?
+Den motsvarar 764
+jag är med i basic admin grupper och första konton på systemet
+6. Sudo behövs när du laddar du installerar eller uppdaterar från apt. Tree visar bara filerna med ett tree gui
+
+
+Medel (Övning 8): Samma svar, kortare kedja
+
+1.wc -l /etc/passwd
+
+2.cut -d: -f1 /etc/passwd | sort
+
+3.grep '/bin/bash' /etc/passwd
+
+4.grep -v '/bin/bash$' /etc/passwd | wc -l
+
+5.cut -d: -f3 /etc/passwd | sort -n | tail -1 
+
+6. cut -d: -f7 /etc/passwd | sort | uniq -c | sort -nr
+
+Medel (Övning 7): Rättighetsgymnastik
+
+1. Ja
+
+2.Ja
+
+3. Nej, nej, Ja
+
+4. Nej, Ja
+
+5.Nej, Ja
+
+6. Funkar inte, Inget sudo
+
+7.Nej, Nej
+
+8. Du aktiverar sticky bit på katalogen, låter alla skriva läsa och köra men bara ägaren kan radera filen.
+
+Övning 9: Kedjan 
+
+1. `cd -` läser variabeln **$OLDPWD** för att förflytta dig tillbaka till den katalog du stod i senast. Om du kör enbart `cd` utan några argument läser skalet variabeln **$HOME** och tar dig direkt till din hemkatalog
+
+2.`/bin` är på moderna system en symbolisk länk som pekar mot `/usr/bin`. Kommandot `pwd` visar den **logiska sökvägen** (`/bin`), medan **pwd -P** visar den **fysiska sökvägen** på disken (`/usr/bin`). I ett skript ska du skriva `pwd -P` om du vill säkerställa att du får den faktiska fysiska mappsökvägen utan att bli lurad av symboliska länkar.
+
+3.Första låter variablet expanderas och den andra tar det bokstavligt. Jag skulle använda $ så att variablerna kan expanderas och sättas till värdena de faktist har. 
+
+4.Skalvariabler ligger bara under skalet du arbetar under just nu medands miljövariabler arvs ner till alla skal som skapas i terminalen. set visar alla variablerna medans env skriver ut alla miljö variablerna.
+
+5. Det första försöket funkade inte för att sökvägen inte var definerat som ett variabel. Med ./bin/hej så gav vi en direkt sökväg. Du skulle kunna köra skadlig kod av misstag därför kollar den inte i katalogen du befinner dig i förän du skrive . före. Windows söker i den aktuella katalogen först.
+
+6. 2>&1 betyder att man pekar filbeskrivare 2 (stderr) till samma ställe som filbeskrivare 1 (stdout) till samma ställe. stdout hammnar i filen och stderr visas på skärmen.
+
+7. Första visar både stdout och stderr. Andra visar bara stdout och skicka stderr till papperskorgen /dev/null. Den tredje Kopplar först ihop `stderr` med `stdout` och kastar sedan `stdout` till `/dev/null`[6]. Detta gör att de godkända sökresultaten slängs bort medan felmeddelandena skickas genom pipen och räknas av `wc -l'.
+
+8.Verktyget tee sparar utmatningen till en fil och skickar vidare den till nästa kommando. Det är kommandot tee som har rättigheter att skriva därför anänder vi tee på den.
+
+9.uniq -c kan bara kombinera de som är samma om de ligger på rader intill varandra. 
+
+10. Standard beteendet är farligt för att det första kommandot kan gå oupptäckt om man inte har med pipestatus. 
+
+Fällan på slutet. Omdirigeringen skriver över texten innan sort hinner sortera filen. 
+sort data.txt > data.tmp && mv data.tmp data.txt
+sort -o data.txt data.txt
+sort data.txt | sponge data.txt
 
 
